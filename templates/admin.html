@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+</head>
+
+<body>
+
+<h2>Print Orders</h2>
+
+<table border="1" cellpadding="10">
+
+<tr>
+<th>ID</th>
+<th>File</th>
+<th>Pages</th>
+<th>Copies</th>
+<th>Type</th>
+<th>Price</th>
+<th>Status</th>
+<th>Created</th>
+</tr>
+
+{% for order in orders %}
+
+<tr>
+<td>{{ order.id }}</td>
+<td>{{ order.filename }}</td>
+<td>{{ order.pages }}</td>
+<td>{{ order.copies }}</td>
+<td>{{ order.print_type }}</td>
+<td>₹ {{ order.price }}</td>
+<td>{{ order.status }}</td>
+<td>{{ order.created_at }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Print Options</title>
+
+<script>
+
+function calculatePrice() {
+
+    let pages = parseInt(document.getElementById("pages").value);
+    let copies = parseInt(document.getElementById("copies").value);
+    let type = document.querySelector('input[name="print_type"]:checked').value;
+
+    let pricePerPage = 2;
+
+    if(type === "color"){
+        pricePerPage = 7;
+    }
+
+    let total = pages * copies * pricePerPage;
+
+    document.getElementById("total_price").innerText = total;
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+<h2>Print Options</h2>
+
+<p><b>File:</b> {{ filename }}</p>
+<p><b>Pages:</b> {{ pages }}</p>
+
+<input type="hidden" id="pages" value="{{ pages }}">
+
+<hr>
+
+<h3>Print Type</h3>
+
+<input type="radio" name="print_type" value="bw" checked onchange="calculatePrice()"> Black & White<br>
+<input type="radio" name="print_type" value="color" onchange="calculatePrice()"> Color<br>
+
+<hr>
+
+<h3>Copies</h3>
+
+<input type="number" id="copies" value="1" min="1" onchange="calculatePrice()">
+
+<hr>
+
+<h3>Total Price</h3>
+
+<p> <span id="total_price">0</span></p>
+
+<button type="button" onclick="placeOrder()">Place Order</button>
+
+<script>
+function placeOrder() {
+
+    const filename = "{{ filename }}";
+    const pages = {{ pages }};
+    const copies = document.getElementById("copies").value;
+    const printType = document.querySelector('input[name="print_type"]:checked').value;
+    const price = document.getElementById("total_price").innerText;
+
+    fetch("/create-order", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            filename: filename,
+            pages: pages,
+            copies: copies,
+            print_type: printType,
+            price: price
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        alert("Order Created! Order ID: " + data.order_id);
+
+        window.location.href = "/";
+    });
+}
+</script>
+
+
+<script>
+calculatePrice()
+</script>
+
+</body>
+
+</html>
